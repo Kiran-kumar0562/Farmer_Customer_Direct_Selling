@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'FarmerApp',
+    'CustomerApp',
+    'accounts',
+    'products',
+    'orders',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -74,8 +80,12 @@ WSGI_APPLICATION = 'FarmerMarketing.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'farmer_db',
+        'USER':'root',
+        'PASSWORD':'root',
+        'HOST': 'localhost',
+        'PORT': 3306
     }
 }
 
