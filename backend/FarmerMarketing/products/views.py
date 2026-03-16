@@ -1,38 +1,36 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
+
 from .models import Product
 from .serializers import ProductSerializer
 from accounts.models import User
 
 
-#  Add Product (Farmer)
+# Add Product (Farmer Only)
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_product(request):
 
-    farmer_id = request.data.get("farmer_id")
+    user = request.user
 
-    try:
-        farmer = User.objects.get(id=farmer_id)
+    if user.role != "farmer":
+        return Response(
+            {"error": "Only farmers can add products"},
+            status=status.HTTP_403_FORBIDDEN
+        )
 
-        if farmer.role != "farmer":
-            return Response({"error": "Only farmers can add products"})
+    serializer = ProductSerializer(data=request.data)
 
-        data = request.data
-        data["farmer"] = farmer.id
+    if serializer.is_valid():
+        serializer.save(farmer=user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        serializer = ProductSerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-
-        return Response(serializer.errors)
-
-    except User.DoesNotExist:
-        return Response({"error": "Farmer not found"})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#  View All Products
+# View All Products
 @api_view(['GET'])
 def product_list(request):
 
@@ -42,27 +40,35 @@ def product_list(request):
     return Response(serializer.data)
 
 
-#  View Single Product
+# View Single Product
 @api_view(['GET'])
 def product_detail(request, id):
 
     try:
         product = Product.objects.get(id=id)
-
         serializer = ProductSerializer(product)
-
         return Response(serializer.data)
 
     except Product.DoesNotExist:
-        return Response({"error": "Product not found"})
+        return Response(
+            {"error": "Product not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 
-#  Update Product
+# Update Product (Farmer Only)
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_product(request, id):
 
     try:
         product = Product.objects.get(id=id)
+
+        if request.user != product.farmer:
+            return Response(
+                {"error": "You can only update your own products"},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         serializer = ProductSerializer(product, data=request.data)
 
@@ -73,25 +79,38 @@ def update_product(request, id):
         return Response(serializer.errors)
 
     except Product.DoesNotExist:
-        return Response({"error": "Product not found"})
+        return Response(
+            {"error": "Product not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 
-#  Delete Product
+# Delete Product (Farmer Only)
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_product(request, id):
 
     try:
         product = Product.objects.get(id=id)
+
+        if request.user != product.farmer:
+            return Response(
+                {"error": "You can only delete your own products"},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         product.delete()
 
         return Response({"message": "Product deleted successfully"})
 
     except Product.DoesNotExist:
-        return Response({"error": "Product not found"})
+        return Response(
+            {"error": "Product not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 
-#  Farmer Products List
+# Farmer Product List
 @api_view(['GET'])
 def farmer_products(request, farmer_id):
 

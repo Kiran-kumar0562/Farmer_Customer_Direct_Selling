@@ -1,32 +1,30 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
+
 from .models import Order
 from .serializers import OrderSerializer
-from accounts.models import User
 from products.models import Product
 
 
-#  Place Order (Customer)
+# Place Order (Customer)
 @api_view(['POST'])
 def place_order(request):
 
-    customer_id = request.data.get("customer_id")
-    product_id = request.data.get("product_id")
+    product_id = request.data.get("product")
     quantity = request.data.get("quantity")
 
     try:
-        customer = User.objects.get(id=customer_id)
-
-        if customer.role != "customer":
-            return Response({"error": "Only customers can place orders"})
-
         product = Product.objects.get(id=product_id)
 
-        data = request.data
-        data["customer"] = customer.id
-        data["product"] = product.id
-
-        serializer = OrderSerializer(data=data)
+        serializer = OrderSerializer(
+            data={
+                "product": product.id,
+                "quantity": quantity
+            },
+            context={'request': request}
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -34,14 +32,11 @@ def place_order(request):
 
         return Response(serializer.errors)
 
-    except User.DoesNotExist:
-        return Response({"error": "Customer not found"})
-
     except Product.DoesNotExist:
         return Response({"error": "Product not found"})
 
 
-# View All Orders (Admin)
+# View All Orders
 @api_view(['GET'])
 def order_list(request):
 
@@ -51,34 +46,57 @@ def order_list(request):
     return Response(serializer.data)
 
 
-#  Customer Order History
+# Customer Order History
 @api_view(['GET'])
-def customer_orders(request, customer_id):
+@permission_classes([IsAuthenticated])
+def customer_orders(request):
 
-    orders = Order.objects.filter(customer_id=customer_id)
+    user = request.user
 
+    if user.role != "customer":
+        return Response(
+            {"error": "Only customers can view their orders"},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    orders = Order.objects.filter(customer=user)
     serializer = OrderSerializer(orders, many=True)
 
     return Response(serializer.data)
 
 
-#  Farmer Orders (Orders for Farmer Products)
+# Farmer Orders (Orders for farmer products)
 @api_view(['GET'])
-def farmer_orders(request, farmer_id):
+@permission_classes([IsAuthenticated])
+def farmer_orders(request):
 
-    orders = Order.objects.filter(product__farmer_id=farmer_id)
+    user = request.user
 
+    if user.role != "farmer":
+        return Response(
+            {"error": "Only farmers can view these orders"},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    orders = Order.objects.filter(product__farmer=user)
     serializer = OrderSerializer(orders, many=True)
 
     return Response(serializer.data)
 
 
-#  Update Order Status
+# Update Order Status (Farmer)
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_order_status(request, id):
 
     try:
         order = Order.objects.get(id=id)
+
+        if request.user != order.product.farmer:
+            return Response(
+                {"error": "You can only update your product orders"},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         serializer = OrderSerializer(order, data=request.data, partial=True)
 
@@ -89,19 +107,32 @@ def update_order_status(request, id):
         return Response(serializer.errors)
 
     except Order.DoesNotExist:
-        return Response({"error": "Order not found"})
+        return Response(
+            {"error": "Order not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 
-#  Cancel Order
+# Cancel Order
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def cancel_order(request, id):
 
     try:
         order = Order.objects.get(id=id)
+
+        if request.user != order.customer:
+            return Response(
+                {"error": "You can only cancel your own orders"},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         order.delete()
 
         return Response({"message": "Order cancelled successfully"})
 
     except Order.DoesNotExist:
-        return Response({"error": "Order not found"})
+        return Response(
+            {"error": "Order not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )

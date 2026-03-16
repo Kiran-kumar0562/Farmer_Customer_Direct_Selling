@@ -1,14 +1,19 @@
 from django.urls import path
-from .views import ( place_order,order_list,customer_orders,
-    farmer_orders,update_order_status,cancel_order)
+from . import views
 
 urlpatterns = [
 
-    path('place/', place_order),
-    path('', order_list),
-    path('customer/<int:customer_id>/', customer_orders),
-    path('farmer/<int:farmer_id>/', farmer_orders),
-    path('update/<int:id>/', update_order_status),
-    path('cancel/<int:id>/', cancel_order),
+    # Place Order
+    path('create/', views.place_order, name='place_order'),
+    # View All Orders
+    path('', views.order_list, name='order_list'),
+    # Customer Orders
+    path('customer/', views.customer_orders, name='customer_orders'),
+    # Farmer Orders
+    path('farmer/', views.farmer_orders, name='farmer_orders'),
+    # Update Order Status
+    path('update/<int:id>/', views.update_order_status, name='update_order_status'),
+    # Cancel Order
+    path('delete/<int:id>/', views.cancel_order, name='cancel_order'),
 
 ]
