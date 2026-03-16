@@ -7,4 +7,4 @@ class Customers(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
 
     def __str__(self):
-        return self.name
+        return self.user.username
