@@ -1,24 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../css/Login.css";
 
 function Login(){
 
-return(
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-<div className="login-container">
-    
+  const handleLogin = () => {
+    if(username === "" || password === ""){
+      alert("Please enter username and password");
+    }
+    else{
+      alert("Login Successful");
+    }
+  }
 
-<h2>Login</h2>
+  return(
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Login</h2>
 
-<input type="email" placeholder="Email"/> 
-<input type="password" placeholder="Password"/>
+        <input 
+          type="text" 
+          placeholder="Username"
+          value={username}
+          onChange={(e)=>setUsername(e.target.value)}
+        />
 
-<button>Login</button>
+        <input 
+          type="password" 
+          placeholder="Password"
+          value={password}
+          onChange={(e)=>setPassword(e.target.value)}
+        />
 
-</div>
+        <button className="login-btn" onClick={handleLogin}>
+          Login
+        </button>
 
-)
+        <p className="register-text">
+          Don't have an account? 
+          <Link to="/register"> Register</Link>
+        </p>
 
+      </div>
+    </div>
+  )
 }
 
-export default Login
+export default Login;

@@ -3,11 +3,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 import Navbar from "./components/Navbar";
+
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import FarmerDashboard from "./pages/FarmerDashboard";
@@ -17,18 +19,28 @@ function App() {
   return (
     <BrowserRouter>
 
-      <Navbar/>
+      {/* Navbar visible on all pages */}
+      <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<Register/>}/>
-        <Route path="/products" element={<ProductList/>}/>
-        <Route path="/cart" element={<Cart/>}/>
-        <Route path="/checkout" element={<Checkout/>}/>
-        <Route path="/orders" element={<Orders/>}/>
-        <Route path="/farmer" element={<FarmerDashboard/>}/>
-        <Route path="/add-product" element={<AddProduct/>}/>
+
+        {/* Main pages */}
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<ProductList />} />
+        <Route path="/cart" element={<Cart />} />
+
+        {/* Authentication */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Order system */}
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<Orders />} />
+
+        {/* Farmer section */}
+        <Route path="/farmer" element={<FarmerDashboard />} />
+        <Route path="/add-product" element={<AddProduct />} />
+
       </Routes>
 
     </BrowserRouter>

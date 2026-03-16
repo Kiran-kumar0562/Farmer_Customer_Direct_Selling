@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <nav className="navbar">
 
-      <h2>Farmer Direct Selling</h2>
+      <h2>Farmer Direct Selling System</h2>
     <div className="nav-links">
       <a href="/">Home</a>
       <a href="/products">Products</a>

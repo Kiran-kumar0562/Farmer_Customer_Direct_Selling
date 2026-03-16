@@ -1,23 +1,11 @@
 import React from "react";
 
-function AddProduct(){
-
-return(
-
-<div>
-
-<h2>Add Product</h2>
-
-<input type="text" placeholder="Product Name"/>
-
-<input type="number" placeholder="Price"/>
-
-<button>Add Product</button>
-
-</div>
-
-)
-
+function ProductList(){
+  return (
+    <div>
+      <h1>All Products</h1>
+    </div>
+  )
 }
 
-export default AddProduct
+export default ProductList;
