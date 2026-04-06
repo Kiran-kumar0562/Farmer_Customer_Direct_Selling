@@ -1,0 +1,23 @@
+{
+  "name": "farmer-customer-direct-selling",
+  "version": "1.0.0",
+  "description": "\"# Farmer Customer Direct Selling System\"",
+  "main": "index.js",
+  "scripts": {
+      "start": "node index.js",
+      "dev": "nodemon index.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kbalu9347-max/farmer-customer-direct-selling.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kbalu9347-max/farmer-customer-direct-selling/issues"
+  },
+  "homepage": "https://github.com/kbalu9347-max/farmer-customer-direct-selling#readme"
+}
