@@ -1,34 +1,67 @@
-import React from "react";
-import ProductCard from "../components/ProductCard";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./HomePage.css"; // reuse same styling
 
-function ProductList(){
+const API_BASE = "http://127.0.0.1:8000/api";
 
-const products = [
+function Products() {
+  const [products, setProducts] = useState([]);
 
-{ id:1 , name:"Tomato", price:40 },
+  // 🔥 Fetch products from backend
+  useEffect(() => {
+    axios.get(`${API_BASE}/products/`)
+      .then((res) => {
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-{ id:2 , name:"Potato", price:30 },
+  // ✅ Add to cart
+  const handleAddToCart = (product) => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-{ id:3 , name:"Carrot", price:50 }
+    cart.push(product);
 
-];
+    localStorage.setItem("cart", JSON.stringify(cart));
 
-return(
+    alert("✅ Added to cart");
+  };
 
-<div>
+  return (
+    <div className="featured-section">
 
-<h2>Products</h2>
+      <h2>All Products</h2>
 
-{products.map(product => (
+      <div className="product-grid">
 
-<ProductCard key={product.id} product={product}/>
+        {products.map((product) => (
+          <div className="product-card" key={product.id}>
 
-))}
+            <img
+              src={product.image || "https://via.placeholder.com/150"}
+              alt={product.name}
+            />
 
-</div>
+            <h3>{product.name}</h3>
 
-)
+            <p>₹{product.price}</p>
 
+            <button
+              className="cart-btn"
+              onClick={() => handleAddToCart(product)}
+            >
+              Add to Cart
+            </button>
+
+          </div>
+        ))}
+
+      </div>
+
+    </div>
+  );
 }
 
-export default ProductList
+export default Products;

@@ -1,61 +1,26 @@
-.navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#2e7d32;
-padding:15px 40px;
-color:white;
-font-family:Arial, sans-serif;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2e7d32;
+  padding: 10px 20px;
+  color: white;
 }
 
-/* Logo / Title */
-.navbar h2{
-margin:0;
-font-size:40px;
-letter-spacing:1px;
-border: #2e7d32;
-box-shadow: white;
+.nav-right {
+  display: flex;
+  align-items: center;
 }
 
-/* Navigation links container */
-.nav-links{
-display:flex;
-align-items:center;
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Links style */
-.nav-links a{
-margin-left:20px;
-text-decoration:none;
-color:white;
-font-weight:bold;
-font-size:16px;
-padding:8px 12px;
-border-radius:5px;
-transition:all 0.3s ease;
-}
-
-/* Hover effect */
-.nav-links a:hover{
-background:white;
-color:#2e7d32;
-}
-
-/* Active link effect */
-.nav-links a.active{
-background:white;
-color:#2e7d32;
-}
-
-/* Button style link (login/register) */
-.nav-links .nav-btn{
-background:#1b5e20;
-padding:8px 15px;
-border-radius:5px;
-}
-
-.nav-links .nav-btn:hover{
-background:white;
-color:#1b5e20;
+.profile-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
 }

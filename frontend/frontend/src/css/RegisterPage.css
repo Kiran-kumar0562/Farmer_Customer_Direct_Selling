@@ -1,73 +1,78 @@
-.form-container{
-width:360px;
-margin:60px auto;
-background:white;
-padding:35px;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.15);
-font-family:Arial, sans-serif;
-text-align:center;
+/* Full page background */
+.register-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f8;
 }
 
-.form-container h2{
-margin-bottom:20px;
-color:#333;
-font-weight:bolder;
+/* Form box */
+.register-container form {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.form-container label{
-display:block;
-text-align:left;
-font-size:14px;
-margin-top:10px;
-color:#555;
+/* Title */
+.register-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2e7d32; /* green */
 }
 
-.form-container input{
-width:100%;
-padding:12px;
-margin-top:5px;
-border:1px solid #ccc;
-border-radius:6px;
-font-size:14px;
-transition:0.3s;
+/* Inputs */
+.register-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: 0.3s;
 }
 
-.form-container input:focus{
-border-color:#4CAF50;
-outline:none;
-box-shadow:0 0 5px rgba(76,175,80,0.5);
+/* Input focus */
+.register-container input:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
 }
 
-.form-container button{
-width:100%;
-padding:12px;
-margin-top:20px;
-background:#4CAF50;
-color:white;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
-transition:0.3s;
+/* Button */
+.register-container button {
+  width: 100%;
+  padding: 10px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.form-container button:hover{
-background:#3d8b40;
+/* Button hover */
+.register-container button:hover {
+  background: #1b5e20;
 }
 
-.form-container p{
-margin-top:15px;
-font-size:13px;
-color:#777;
+/* Login text */
+.login-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
 }
 
-.form-container a{
-color:#4CAF50;
-text-decoration:none;
-font-weight:bold;
+/* Link */
+.login-text a {
+  color: #2e7d32;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-.form-container a:hover{
-text-decoration:underline;
+.login-text a:hover {
+  text-decoration: underline;
 }

@@ -5,7 +5,7 @@ from django.conf import settings
 class Farmer(models.Model):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    farm_name = models.CharField(max_length=200)
+    farm_name = models.CharField(max_length=200, blank=True, null=True)
     location = models.CharField(max_length=200)
     phone = models.CharField(max_length=15)
 

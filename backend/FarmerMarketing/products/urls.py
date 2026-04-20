@@ -1,13 +1,11 @@
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
-    
-    path('', views.product_list),
-    path('add/', views.add_product),
-    path('<int:id>/', views.product_detail),
-    path('update/<int:id>/', views.update_product),
-    path('delete/<int:id>/', views.delete_product),
-    path('farmer/<int:farmer_id>/', views.farmer_products),
-
+    path('', ProductListView.as_view()),
+    path('<int:id>/', ProductDetailView.as_view()),
+    path('add/', AddProductView.as_view()),
+    path('update/<int:id>/', UpdateProductView.as_view()),
+    path('delete/<int:id>/', DeleteProductView.as_view()),
+    path('farmer/<int:farmer_id>/', FarmerProductsView.as_view()),
 ]

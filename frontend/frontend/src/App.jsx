@@ -32,6 +32,7 @@ function App() {
         {/* Authentication */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/farmerdashboard" element={<FarmerDashboard />} />
 
         {/* Order system */}
         <Route path="/checkout" element={<Checkout />} />
