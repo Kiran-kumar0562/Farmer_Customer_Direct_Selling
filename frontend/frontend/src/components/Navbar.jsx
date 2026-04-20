@@ -3,57 +3,77 @@ import { Link, useNavigate } from "react-router-dom";
 import "../css/Navbar.css";
 
 function Navbar() {
-  const [user, setUser] = useState(null);
+
   const navigate = useNavigate();
 
+  const [token, setToken] = useState(localStorage.getItem("access"));
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
+
+  // 🔄 Sync storage on mount + updates
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const updateUser = () => {
+      const storedUser = localStorage.getItem("user");
 
-    if (storedUser && storedUser !== "undefined") {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.log("Invalid user data in localStorage");
-        localStorage.removeItem("user");
-      }
+     if (storedUser && storedUser !== "undefined") {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
     }
-  }, []);
-
-  const handleLogout = () => {
-    // ✅ clear everything
-    localStorage.removeItem("user");
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-
-    setUser(null);
-    navigate("/login");
   };
 
-  // ✅ Go to dashboard
+  // initial load
+  updateUser();
+
+    // listen for changes in other tabs
+    window.addEventListener("authChange", updateUser);
+
+    return () => {
+      window.removeEventListener("authchange", updateUser);
+    };
+  }, []);
+
+  // 🔐 ROLE DASHBOARD
   const goToDashboard = () => {
-    navigate("/farmerdashboard");
+    const role = localStorage.getItem("role");
+
+    if (role === "farmer") {
+      navigate("/farmerdashboard");
+    } else {
+      navigate("/products");
+    }
+  };
+
+  // 🔴 LOGOUT
+  const handleLogout = () => {
+    localStorage.clear();
+
+    window.dispatchEvent(new Event("authChange"));
+
+    navigate("/login");
   };
 
   return (
     <nav className="navbar">
+
       <h2>Farmer Direct Selling System</h2>
 
       <div className="nav-links">
+
         <Link to="/">Home</Link>
         <Link to="/products">Products</Link>
         <Link to="/cart">Cart</Link>
 
-        {/* ✅ If user logged in */}
-        {user ? (
+        {/* 👤 AUTH UI */}
+        {token && user ? (
           <>
-            {/* 🔥 Clickable Username */}
             <span
               className="username"
               onClick={goToDashboard}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", fontWeight: "bold" }}
             >
-              Welcome, {user.username} 👋
+              👋 Welcome, {user.username}
             </span>
 
             <button onClick={handleLogout} className="logout-btn">
@@ -66,7 +86,9 @@ function Navbar() {
             <Link to="/register">Register</Link>
           </>
         )}
+
       </div>
+
     </nav>
   );
 }

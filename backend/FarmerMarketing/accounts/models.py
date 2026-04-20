@@ -8,7 +8,7 @@ class User(AbstractUser):
         ('farmer', 'Farmer'),
         ('customer', 'Customer'),
     )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES,default='customer')
     phone = models.CharField(max_length=15)
     location = models.CharField(max_length=200 ,null=True,blank=True)
     farm_name = models.CharField(max_length=200, blank=True, null=True)

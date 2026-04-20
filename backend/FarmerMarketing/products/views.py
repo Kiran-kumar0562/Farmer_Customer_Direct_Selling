@@ -1,16 +1,23 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
-
+from .permissions import IsFarmerOrReadOnly
+from rest_framework.viewsets import ModelViewSet
 from .models import Product
 from .serializers import ProductSerializer
-
+from rest_framework.exceptions import PermissionDenied  
 
 # ✅ View All Products (PUBLIC)
 class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsFarmerOrReadOnly]
 
 
 # ✅ View Single Product (PUBLIC)
@@ -30,7 +37,7 @@ class AddProductView(generics.CreateAPIView):
         user = self.request.user
 
         if user.role != "farmer":
-            raise permissions.PermissionDenied("Only farmers can add products")
+            raise PermissionDenied("Only farmers can add products")
 
         serializer.save(farmer=user)
 

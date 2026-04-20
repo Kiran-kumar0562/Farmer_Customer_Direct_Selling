@@ -13,7 +13,8 @@ import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import FarmerDashboard from "./pages/FarmerDashboard";
-import AddProduct from "./pages/AddProduct";
+import Products from "./pages/Products";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
 
         {/* Main pages */}
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<ProductList />} />
+        <Route path="/products" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
 
         {/* Authentication */}
@@ -40,7 +41,27 @@ function App() {
 
         {/* Farmer section */}
         <Route path="/farmer" element={<FarmerDashboard />} />
-        <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/Products" element={<Products />} />
+
+              // Farmer dashboard (ONLY FARMER)
+              <Route
+                path="/farmerdashboard"
+                element={
+                  <ProtectedRoute role="farmer">
+                    <FarmerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              // Products page (ONLY CUSTOMER)
+              <Route
+                path="/products"
+                element={
+                  <ProtectedRoute role="customer">
+                    <Products />
+                  </ProtectedRoute>
+                }
+              />
 
       </Routes>
 

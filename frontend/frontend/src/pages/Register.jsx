@@ -40,7 +40,7 @@ function Register() {
 
       // ✅ Redirect
       if (role === "farmer") {
-        navigate("/farmer-dashboard");
+        navigate("/FarmerDashboard");
       } else {
         navigate("/");
       }

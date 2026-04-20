@@ -35,7 +35,8 @@ class LoginView(APIView):
             return Response({
                 "user": {
                     "id": user.id,
-                    "username": user.username
+                    "username": user.username,
+                    "role": user.role
                 }
             }, status=status.HTTP_200_OK)
 
@@ -53,7 +54,8 @@ class ProfileView(APIView):
         user = request.user
         return Response({
             "id": user.id,
-            "username": user.username
+            "username": user.username,
+            "role": user.role 
         })
 # Optional logout view (just frontend token delete, for JWT no server action needed)
 
