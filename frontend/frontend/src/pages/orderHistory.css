@@ -1,0 +1,61 @@
+/* PAGE CONTAINER */
+
+.order-history-container {
+  padding: 12px 18px;
+}
+
+
+/* PAGE TITLE */
+
+.order-title {
+  font-size: 20px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+
+/* ORDER CARD */
+
+.order-card {
+  background: white;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+}
+
+
+/* USERNAME */
+
+.order-username {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+
+/* ORDER ID */
+
+.order-id {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+
+/* PRODUCT LIST */
+
+.order-item {
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+
+/* TOTAL AMOUNT */
+
+.order-total {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: green;
+}
