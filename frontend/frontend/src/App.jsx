@@ -11,10 +11,11 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
-import Orders from "./pages/Orders";
+import Orders from "./pages/orderHistory";
 import FarmerDashboard from "./pages/FarmerDashboard";
 import Products from "./pages/Products";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import OrderHistory from "./pages/OrderHistory";
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
 
         {/* Order system */}
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/order-history" element={<OrderHistory />} />
 
         {/* Farmer section */}
         <Route path="/farmer" element={<FarmerDashboard />} />

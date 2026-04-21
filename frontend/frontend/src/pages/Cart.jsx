@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "./Cart.css";
 
 function Cart() {
 
   const [cart, setCart] = useState({});
+  const navigate = useNavigate();
 
+
+  // Load cart from localStorage
   useEffect(() => {
+
     const savedCart =
       JSON.parse(localStorage.getItem("cart")) || {};
 
     setCart(savedCart);
+
   }, []);
 
 
-  // increase quantity
+  // Increase quantity
   const increaseQty = (id) => {
+
     let updatedCart = { ...cart };
 
     updatedCart[id].quantity += 1;
@@ -24,17 +33,21 @@ function Cart() {
     );
 
     setCart(updatedCart);
+
   };
 
 
-  // decrease quantity
+  // Decrease quantity
   const decreaseQty = (id) => {
+
     let updatedCart = { ...cart };
 
     updatedCart[id].quantity -= 1;
 
     if (updatedCart[id].quantity === 0) {
+
       delete updatedCart[id];
+
     }
 
     localStorage.setItem(
@@ -43,96 +56,191 @@ function Cart() {
     );
 
     setCart(updatedCart);
+
   };
 
 
-  // total price
-  const totalPrice =
+  // Calculate total amount
+  const totalAmount =
     Object.values(cart).reduce(
+
       (total, item) =>
+
         total + item.price * item.quantity,
+
       0
+
     );
 
 
+  // Place Order
+  const placeOrder = async () => {
+
+    try {
+
+      const token = localStorage.getItem("access");
+      if (!token)
+        {
+          alert("Please login again");
+          navigate("/login");
+          return;
+        }
+
+      const cartItems = Object.values(cart);
+
+      if (cartItems.length === 0) {
+
+        alert("Cart is empty");
+
+        return;
+
+      }
+
+      await axios.post(
+
+        "http://127.0.0.1:8000/api/orders/place/",
+
+        { cart: cartItems },
+
+        {
+
+          headers: {
+
+            Authorization: `Bearer ${token}`,
+
+          },
+
+        }
+
+      );
+
+      alert("Order placed successfully!");
+
+      localStorage.removeItem("cart");
+
+      setCart({});
+
+      navigate("/order-history");
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      alert("Failed to place order");
+
+    }
+
+  };
+
+
   return (
-    <div style={{ padding: "20px" }}>
+
+    <div className="cart-container">
 
       <h2>Your Cart</h2>
 
-      {Object.values(cart).length === 0 ? (
-        <p>No items in cart</p>
-      ) : (
-        Object.values(cart).map((item) => (
-          <div
-            key={item.id}
-            style={{
-              border: "1px solid #ddd",
-              padding: "15px",
-              marginBottom: "15px",
-              display: "flex",
-              alignItems: "center",
-              gap: "15px"
-            }}
-          >
 
-            {/* ✅ PRODUCT IMAGE */}
+      {Object.values(cart).length === 0 ? (
+
+        <p>No items in cart</p>
+
+      ) : (
+
+        Object.values(cart).map((item) => (
+
+          <div key={item.id} className="cart-card">
+
             <img
+
               src={
+
                 item.image?.startsWith("http")
+
                   ? item.image
+
                   : item.image
-                    ? `http://127.0.0.1:8000${item.image}`
-                    : "/default-product.png"
+
+                  ? `http://127.0.0.1:8000${item.image}`
+
+                  : "/default-product.png"
+
               }
+
               alt={item.name}
-              style={{
-                width: "90px",
-                height: "90px",
-                objectFit: "cover",
-                borderRadius: "8px"
-              }}
+
+              className="cart-image"
+
             />
 
-            {/* DETAILS */}
-            <div style={{ flex: 1 }}>
 
-              <h3 style={{ margin: "0 0 5px" }}>
-                {item.name}
-              </h3>
+            <div className="cart-info">
+
+              <h3>{item.name}</h3>
 
               <p>₹{item.price}</p>
 
-              {/* QUANTITY CONTROLS */}
-              <div>
-                <button onClick={() => decreaseQty(item.id)}>
+
+              <div className="qty-controls">
+
+                <button
+                  onClick={() => decreaseQty(item.id)}
+                >
                   −
                 </button>
 
-                <span style={{ margin: "0 10px" }}>
-                  {item.quantity}
-                </span>
+                <span>{item.quantity}</span>
 
-                <button onClick={() => increaseQty(item.id)}>
+                <button
+                  onClick={() => increaseQty(item.id)}
+                >
                   +
                 </button>
+
               </div>
 
-              <p>
-                Subtotal = ₹
+
+              <p className="subtotal">
+
+                Subtotal ₹
+
                 {item.price * item.quantity}
+
               </p>
 
             </div>
 
           </div>
+
         ))
+
       )}
 
-      <h2>Total Amount: ₹{totalPrice}</h2>
+
+      {/* Bottom-right summary */}
+
+      {Object.values(cart).length > 0 && (
+
+        <div className="cart-summary">
+
+          <h3>Total Amount: ₹{totalAmount}</h3>
+
+          <button
+            className="place-order-btn"
+            onClick={placeOrder}
+          >
+            Place Order
+          </button>
+
+        </div>
+
+      )}
 
     </div>
+
   );
+
 }
 
 export default Cart;

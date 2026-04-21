@@ -10,51 +10,67 @@ function Navbar() {
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user"))
   );
+  const [role, setRole] = useState(localStorage.getItem("role"));
 
-  // 🔄 Sync storage on mount + updates
+
+  // 🔄 Sync storage on mount + login/logout updates
   useEffect(() => {
+
     const updateUser = () => {
+
       const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("access");
+      const storedRole = localStorage.getItem("role");
 
-     if (storedUser && storedUser !== "undefined") {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setUser(null);
-    }
-  };
+      if (storedUser && storedUser !== "undefined") {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
 
-  // initial load
-  updateUser();
+      setToken(storedToken);
+      setRole(storedRole);
+    };
 
-    // listen for changes in other tabs
+    // initial load
+    updateUser();
+
+    // listen for login/logout updates
     window.addEventListener("authChange", updateUser);
 
     return () => {
-      window.removeEventListener("authchange", updateUser);
+      window.removeEventListener("authChange", updateUser);
     };
+
   }, []);
 
-  // 🔐 ROLE DASHBOARD
+
+  // 🔐 ROLE BASED DASHBOARD NAVIGATION
   const goToDashboard = () => {
-    const role = localStorage.getItem("role");
 
     if (role === "farmer") {
       navigate("/farmerdashboard");
     } else {
       navigate("/products");
     }
+
   };
 
-  // 🔴 LOGOUT
+
+  // 🔴 LOGOUT FUNCTION
   const handleLogout = () => {
+
     localStorage.clear();
 
     window.dispatchEvent(new Event("authChange"));
 
     navigate("/login");
+
   };
 
+
   return (
+
     <nav className="navbar">
 
       <h2>Farmer Direct Selling System</h2>
@@ -62,10 +78,25 @@ function Navbar() {
       <div className="nav-links">
 
         <Link to="/">Home</Link>
-        <Link to="/products">Products</Link>
-        <Link to="/cart">Cart</Link>
 
-        {/* 👤 AUTH UI */}
+        {/* CUSTOMER NAVIGATION */}
+        {role === "customer" && (
+          <>
+            <Link to="/products">Products</Link>
+            <Link to="/cart">Cart</Link>
+            <Link to="/order-history">Orders</Link>
+          </>
+        )}
+
+        {/* FARMER NAVIGATION */}
+        {role === "farmer" && (
+          <>
+            <Link to="/farmerdashboard">Dashboard</Link>
+          </>
+        )}
+
+
+        {/* AUTH SECTION */}
         {token && user ? (
           <>
             <span
@@ -76,7 +107,10 @@ function Navbar() {
               👋 Welcome, {user.username}
             </span>
 
-            <button onClick={handleLogout} className="logout-btn">
+            <button
+              onClick={handleLogout}
+              className="logout-btn"
+            >
               Logout
             </button>
           </>
@@ -90,7 +124,9 @@ function Navbar() {
       </div>
 
     </nav>
+
   );
+
 }
 
 export default Navbar;
